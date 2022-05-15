@@ -1,26 +1,28 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 
-class App extends Component {
-  state = {
-    todos: []
-  };
 
-  async componentDidMount() {
+export default function App(){
+
+  const [todos, setTodos] = useState([])
+
+  const fetchData = async () => {
     try {
       const res = await fetch('http://127.0.0.1:8000/api/');
-      const todos = await res.json();
-      this.setState({
-        todos
-      });
+      const data = await res.json();
+      setTodos(data)
     } catch (e) {
       console.log(e);
     }
   }
 
-  render() {
+  useEffect(() => {
+    fetchData();
+  }, [])
+
+
     return (
       <div>
-        {this.state.todos.map(item => (
+        {todos.map(item => (
           <div key={item.id}>
             <h1>{item.title}</h1>
             <span>{item.description}</span>
@@ -29,6 +31,3 @@ class App extends Component {
       </div>
     );
   }
-}
-
-export default App;
